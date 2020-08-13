@@ -165,7 +165,9 @@ function App() {
           alt=""
         />
         {user ? (
-          <Button onClick={() => auth.signOut()}>Logout</Button>
+          <div className="app__logoutContainer">
+            <Button onClick={() => auth.signOut()}>Logout</Button>
+          </div>
         ) : (
           <div className="app__loginContainer">
             <Button onClick={() => setOpen(true)}>Sign Up</Button>

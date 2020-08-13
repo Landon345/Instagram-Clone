@@ -17,7 +17,12 @@ function Post({ postId, username, caption, imageUrl, user }) {
         .collection("comments")
         .orderBy("timestamp", "desc")
         .onSnapshot((snapshot) => {
-          setComments(snapshot.docs.map((doc) => doc.data()));
+          setComments(
+            snapshot.docs.map((doc) => ({
+              id: doc.id,
+              comment: doc.data(),
+            }))
+          );
         });
     }
 
@@ -36,15 +41,32 @@ function Post({ postId, username, caption, imageUrl, user }) {
     setComment("");
   };
 
+  const deleteComment = (id) => {
+    db.collection("posts").doc(postId).collection("comments").doc(id).delete();
+  };
+
+  const deletePost = () => {
+    db.collection("posts").doc(postId).delete();
+  };
+
   return (
     <div className="post">
       <div className="post__header">
-        <Avatar
-          className="post__avatar"
-          alt="RafehQazi"
-          src="/static/images/avatar/1.jpg"
-        />
-        <h3>{username}</h3>
+        <div className="post__headerUser">
+          <Avatar
+            className="post__avatar"
+            alt="RafehQazi"
+            src="/static/images/avatar/1.jpg"
+          />
+          <h3>{username}</h3>
+        </div>
+        {username === user?.displayName ? (
+          <button className="post__deletePost" onClick={deletePost}>
+            x
+          </button>
+        ) : (
+          <div></div>
+        )}
       </div>
 
       <img className="post__image" src={imageUrl} alt="" />
@@ -54,10 +76,22 @@ function Post({ postId, username, caption, imageUrl, user }) {
       </h4>
 
       <div className="post__comments">
-        {comments.map((comment) => (
-          <p>
-            <strong>{comment.username}</strong> {comment.text}
-          </p>
+        {comments.map(({ id, comment }) => (
+          <div className="post__comment">
+            {comment.username === user?.displayName ? (
+              <button
+                className="post__deleteComment"
+                onClick={() => deleteComment(id)}
+              >
+                X
+              </button>
+            ) : (
+              <div></div>
+            )}
+            <p>
+              <strong>{comment.username}</strong> {comment.text}
+            </p>
+          </div>
         ))}
       </div>
       {user && (
