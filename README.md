@@ -1,6 +1,6 @@
 # Instagram Clone made with React
 
-[hostedSite]https://instagram-clone-3b95e.web.app/
+[hostedSite](https://instagram-clone-3b95e.web.app/)
 
 ### To make it run locally:
 
